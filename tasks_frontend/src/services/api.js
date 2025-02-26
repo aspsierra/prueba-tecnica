@@ -14,6 +14,6 @@ export class Api {
     }
 
     async getAllTasks(){
-        return await this.get(this.baseApiUrl + 'tasks/')
+        return await this.get(this.baseApiUrl + 'tasks-list')
     }
 }
