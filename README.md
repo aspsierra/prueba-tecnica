@@ -1,7 +1,7 @@
 
 # Prueba Técnica
 
-Este repositorio contiene el backend y el frontend para la prueba técnica. propuesta
+Este repositorio contiene el backend y el frontend para la prueba técnica propuesta
 
 ## Backend
 
@@ -33,5 +33,21 @@ De forma opcional, se puede usar el comando `python manage.py createsuperuser` p
 - **localhost:8000/api** muestrá los endpoints disponibles para la API creada.
 
 ## Frontend
+
+Desarrollado usando Vue.js 3.5 y Vite 6.1. Además, se usa [NVM](https://github.com/nvm-sh/nvm) como gestor de la versión de Node.js del proyecto
+
+El backend de la aplicación está contenido en la carpeta **tasks_frontend**.
+
+### Inicialización del proyecto
+
+1. `nvm install`, instalará la version de Node definida en el archivo **.nvmrc**.
+2. `npm install`, instalar los packages necesarios para la aplicación.
+
+### Despliegue
+
+- `npm run dev`, despliega la aplicación en modo desarrollo.
+- **localhost:5173/** es la ruta que usa la aplicación
+
+
 
 ---
