@@ -1,26 +1,30 @@
 from django.core.management.base import BaseCommand
 from tasks_app.models import Family, Task
-from lorem_text import lorem
+from faker import Faker
 import random
 
 class Command(BaseCommand):
     def handle(self, *args, **kwargs):
-        families = ['Programación', 'RRHH', 'Otros']
 
-        for type in families:
-             Family.objects.get_or_create(name=type)
-        
-        states =  ['todo', 'doing', 'done']
+        fake = Faker('es_ES')
 
-        for i in range(10):
+        families = [Family(name=fake.job()) for _ in range(10)]
+        Family.objects.bulk_create(families)
+        families = Family.objects.all()
+
+        states = ['todo', 'doing', 'done']
+
+        for _ in range(50):
             Task.objects.create(
-                family=Family.objects.order_by('?').first(),
-                title=f'Tarea {i+1}',
-                description=lorem.paragraph(),
-                state=random.choice(states)
+                family=random.choice(families),
+                title=fake.sentence(),
+                description=fake.paragraph(),
+                state=random.choice(states),
+                due_date=fake.date_between(start_date='today', end_date="+30d")
             )
 
-        self.stdout.write(self.style.SUCCESS('Database seeded successfully.'))
+        self.stdout.write(self.style.SUCCESS("Base de datos poblada exitosamente!"))
+
 
 
         
