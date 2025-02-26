@@ -25,9 +25,6 @@ SECRET_KEY = 'django-insecure-qcg)&3#2uk^!#7g*vsoz-&o#kc$94e1k_69+uo_j6mqng*hcyh
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -40,6 +37,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'django_filters',
     'tasks_app',
+    'corsheaders'
 ]
 
 MIDDLEWARE = [
@@ -50,6 +48,9 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
+
 ]
 
 ROOT_URLCONF = 'tasks_backend.urls'
@@ -124,3 +125,15 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+ALLOWED_HOSTS = [
+    'localhost',
+    '127.0.0.1',
+]
+
+CORS_ALLOWED_ORIGINS = [
+    'http://127.0.0.1:5173',
+    'http://localhost:5173'
+]
+

@@ -5,7 +5,10 @@
 <script>
 
 export default {
-
+    async mounted(){
+        console.log(await this.$api.getAllTasks());
+        
+    }
 }
 
 </script>
