@@ -1,9 +1,9 @@
-from rest_framework import viewsets, filters
+from rest_framework import viewsets, filters, status
 from django_filters.rest_framework import DjangoFilterBackend
 from .models import Family, Task
 from .serializers import FamilySerializer, TaskSerializer, TaskListSerializer
 from .filters import TaskListFilter, FamilyListFilter
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, action
 from rest_framework.response import Response
 
 class FamilyViewSet(viewsets.ModelViewSet):
@@ -24,6 +24,15 @@ class TaskListViewSet(viewsets.ModelViewSet):
 class TaskViewSet(viewsets.ModelViewSet):
     queryset = Task.objects.all()
     serializer_class = TaskSerializer
+
+    @action(detail=False, methods=['post'], url_path='create-task')
+    def create_task(self, request):
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 @api_view(['GET'])
 def get_task_states(request):
