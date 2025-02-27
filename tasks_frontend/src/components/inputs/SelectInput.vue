@@ -12,7 +12,7 @@
 export default {
     props:{
         label: String,
-        options: ArrayBuffer,
+        options: Array,
     },
     methods: {
         emitValue(event){

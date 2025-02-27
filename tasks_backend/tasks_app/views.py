@@ -14,7 +14,6 @@ class TaskListViewSet(viewsets.ModelViewSet):
     queryset = Task.objects.all()
     serializer_class = TaskListSerializer
     filter_backends = [filters.OrderingFilter, filters.SearchFilter, DjangoFilterBackend]
-    filterset_fields = ['state']
     filterset_class = TaskListFilter
     ordering_fields = ['state', 'due_date']
 
