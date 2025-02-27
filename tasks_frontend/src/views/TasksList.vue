@@ -2,7 +2,7 @@
     <main class="container px-40 pt-20 pb-10">
         <h1 class="text-3xl text-white font-bold mb-5">Listado de Tareas</h1>
 
-        <TaskListFilters v-model="filters.family" :families="families"/>
+        <TaskListFilters :filters="filters" :families="families"/>
         
         <div>
             <div v-for="task in tasks" class="cursor-pointer border-gray-500 hover:brightness-75 border-b-2 mb-2">      
@@ -27,9 +27,9 @@ export default {
             families: [],
             filters: {
                 family: null,
+                title: null,
                 state: null,
-                due_date_start: null,
-                due_date_end: null
+                due_date: null,
             },
         }
     },
@@ -42,10 +42,6 @@ export default {
         this.families = await this.$api.getFamilies()
     },
     watch: {
-        // "filters.family": _.debounce(async function(newVal) {
-        //     console.log('ahi vai', newVal);
-            
-        // }, 1000)
         filters: {
             handler: _.debounce(async function (newFilters) {
                 this.tasks = await this.$api.getAllTasks(newFilters)
