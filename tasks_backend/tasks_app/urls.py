@@ -5,7 +5,7 @@ from .views import FamilyViewSet, TaskViewSet, TaskListViewSet, get_task_states
 router = DefaultRouter()
 router.register(r'families', FamilyViewSet, basename='families')
 router.register(r'tasks-list', TaskListViewSet, basename='tasks-list')
-router.register(r'task/<int:id>', TaskViewSet, basename='task')
+router.register(r'task-detail', TaskViewSet, basename='task')
 
 urlpatterns = [
     path('', include(router.urls)),
