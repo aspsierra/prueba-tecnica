@@ -59,8 +59,16 @@ export class Api {
                 {id: state.value, name: state.label}
             )
         } 
-
-        return formattedStates
         
+        return formattedStates
     }
+    
+    async getTaskDetails(id){
+        return await this.getQuery(this.baseApiUrl + `task-detail/${id}`)
+    }
+
+    async getSingleFamily(id){
+        return await this.getQuery(this.baseApiUrl + `families/${id}`)
+    }
+
 }

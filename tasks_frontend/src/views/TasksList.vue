@@ -15,7 +15,7 @@
         </div>
     </main>
 
-    <dialog  ref="detailsModal" class="modal">   
+    <dialog ref="detailsModal" class="modal">   
         <RouterView />
     </dialog>
 
@@ -64,6 +64,7 @@ export default {
         TaskListFilters
     },
     async mounted() {
+        //this.$refs.detailsModal.close()
         this.fetchTasks()
         this.families = await this.$api.getFamilies()
         this.states = await this.$api.getStates()
