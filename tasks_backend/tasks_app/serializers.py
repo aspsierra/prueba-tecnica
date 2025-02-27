@@ -15,7 +15,8 @@ class TaskSerializer(serializers.ModelSerializer):
 
 
 class TaskListSerializer(serializers.ModelSerializer):
+    state_display = serializers.CharField(source="get_state_display")
     family = FamilySerializer()
     class Meta:
         model = Task
-        fields = ['title', 'state', 'due_date', 'family']
+        fields = ['title', 'state', 'state_display', 'due_date', 'family']

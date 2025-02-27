@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
-import TasksList from '@/components/TasksList.vue'
+import TasksList from '@/views/TasksList.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
