@@ -19,4 +19,4 @@ class TaskListSerializer(serializers.ModelSerializer):
     family = FamilySerializer()
     class Meta:
         model = Task
-        fields = ['title', 'state', 'state_display', 'due_date', 'family']
+        fields = ['id', 'title', 'state', 'state_display', 'due_date', 'family']
