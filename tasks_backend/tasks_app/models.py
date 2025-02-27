@@ -25,7 +25,7 @@ class Task(models.Model):
         verbose_name='familia'
     )
     title = models.CharField(max_length=255, verbose_name='título')
-    description = models.TextField(verbose_name='descripción')
+    description = models.TextField(verbose_name='descripción', null=True, blank=True)
     state = models.CharField(
         max_length=20, 
         choices=STATES, 
