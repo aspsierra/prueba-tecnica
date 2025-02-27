@@ -4,7 +4,7 @@
     <ul>
         <li class="inline mr-2 text-sm">{{ task.family.name }}</li>
         <li class="inline mr-2 text-sm">{{ task.state_display }}</li>
-        <li class="inline mr-2 text-sm">{{ task.due_date || 'Sin fecha límite' }}</li>
+        <li class="inline mr-2 text-sm">{{ formatDate(task.due_date) || 'Sin fecha límite' }}</li>
     </ul>
 
 
@@ -17,8 +17,8 @@ export default {
         task: Object,
     },
     methods: {
-        formatDate(date){
-            return new Intl.DateTimeFormat("es-ES").format(date)
+        formatDate(date){         
+            return new Intl.DateTimeFormat("es-ES",).format(new Date(date))
         }
 
     }

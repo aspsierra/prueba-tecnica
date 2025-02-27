@@ -1,5 +1,5 @@
 import django_filters
-from .models import Task
+from .models import Task, Family
 
 class TaskListFilter(django_filters.FilterSet):
     family = django_filters.NumberFilter(field_name="family__id")
@@ -10,5 +10,12 @@ class TaskListFilter(django_filters.FilterSet):
     class Meta:
         model= Task
         fields = ['family', 'title', 'due_date', 'state']
+            
+class FamilyListFilter(django_filters.FilterSet):
+    name = django_filters.CharFilter(field_name="name", lookup_expr='icontains')
+
+    class Meta:
+        model= Family
+        fields = ['name']
             
         

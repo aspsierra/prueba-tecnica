@@ -68,22 +68,18 @@ export default {
     },
     methods: {
         clearFilters(){
-            console.log('ejjjjj', this.filters.family);
             this.$emit('clearFilters')
             Object.assign(this.filters, _.cloneDeep(this.$parent.initialFilters));
-            console.log('ejjjjj', this.filters.family);
             // Object.assign(this.filters, this.resetFilters);
             // console.log(this.filters);
         },
         orderTable(){
             this.order = !this.order
             if(this.order) {
-                this.filters.ordering = '-due_date'
+                this.$emit('order', '-due_date')
             } else {         
-                this.filters.ordering = 'due_date'        
-            }
-            console.log(this.filters.ordering);
-            
+                this.$emit('order', 'due_date')
+            }            
         }
     },
 }

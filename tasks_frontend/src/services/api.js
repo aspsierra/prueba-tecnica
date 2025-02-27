@@ -18,17 +18,9 @@ export class Api {
             })
     }
 
-    async getAllTasks(params={}){
-        let searchFilters = this.formatQueryParams(params); 
-        let res = await this.getQuery(this.baseApiUrl + 'tasks-list/', searchFilters)
-        
-        return res
-    }
-
-    formatQueryParams(params) {
+    formatQueryParams(params, order) {
         let searchFilters = {}
-        for (const [key, value] of Object.entries(params)) {
-            
+        for (const [key, value] of Object.entries(params)) {      
             if (key === "due_date"){
                 for (const [dateKey, dateValue] of Object.entries(value)) {
                     if(dateValue){
@@ -40,11 +32,22 @@ export class Api {
             }
         }
 
+        if (order) {
+            searchFilters['ordering'] = order
+        }
+
         return searchFilters
     }
 
-    async getFamilies(){
-        return await this.getQuery(this.baseApiUrl + 'families/')
+    async getAllTasks(params={}, ordering = ''){
+        let searchFilters = this.formatQueryParams(params, ordering); 
+        let res = await this.getQuery(this.baseApiUrl + 'tasks-list/', searchFilters)
+        
+        return res
+    }
+
+    async getFamilies(params={}, ordering = ''){
+        return await this.getQuery(this.baseApiUrl + 'families/', this.formatQueryParams(params, ordering))
     }
 
     async getStates() {
