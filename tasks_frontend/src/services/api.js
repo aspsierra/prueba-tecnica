@@ -21,7 +21,7 @@ export class Api {
     async putQuery(URL, data, headers=this.headers){
         return await axios
             .put(URL, data)
-            .then(response=> response.data)
+            .then(response => true)
             .catch(err => {
                 console.error('PUT request failed', err)
                 throw err
@@ -73,12 +73,12 @@ export class Api {
         return formattedStates
     }
     
-    async getTaskDetails(id){
+    async getTaskData(id){
         return await this.getQuery(this.baseApiUrl + `task-detail/${id}`)
     }
 
     async updateTask(data){
-
+        console.log(data);
         return await this.putQuery(this.baseApiUrl + `task-detail/${data.id}/update/`, data)
 
     }

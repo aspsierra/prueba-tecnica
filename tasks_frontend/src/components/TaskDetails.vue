@@ -1,9 +1,8 @@
 <template>
 
   <div class="modal-box w-11/12 max-w-5xl h-screen p-0 flex flex-col overflow-visible">
-    <form method="dialog" class=" flex justify-between items-center">
-      <p class="ml-10">{{ task.family.name }}</p>
-      <div>
+    <form method="dialog">
+      <div class="w-full text-right">
         <div @click="editTask" class="btn btn-md btn-info m-2">
           <Icon v-if="!editing" icon="material-symbols:edit-outline-rounded" width="24" height="24" />
           <Icon v-if="editing" icon="material-symbols:check-rounded" width="24" height="24" />        
@@ -20,10 +19,10 @@
           <p v-if="!editing">{{ task.title }}</p>
 
           <label v-if="editing" class="form-control">
-            <div v-if="formError.family" class="label">
-              <span class="label-text font-normal text-red-500"> {{ formError.family[0] }} </span>
+            <div v-if="formErrorMsgs.title" class="label">
+              <span class="label-text font-normal text-red-500"> {{ formErrorMsgs.title[0] }} </span>
             </div>
-            <TextInput  class="w-full" :class="formError.family ? 'input-error' : ''" v-model="task.title" label="Título de la tarea" :value="task.title"/>
+            <TextInput  class="w-full" :class="formErrorMsgs.title ? 'input-error' : ''" v-model="task.title" label="Título de la tarea" :value="task.title"/>
           </label>
         </div>
 
@@ -39,7 +38,13 @@
         <div class="border-b-2  py-4">
           <p>Fecha de vencimiento</p>
 
+          <label v-if="editing" class="form-control">
+            <div v-if="formErrorMsgs.due_date" class="label">
+              <span class="label-text font-normal text-red-500"> {{ formErrorMsgs.due_date[0] }} </span>
+            </div>
+          </label>
           <vue-tailwind-datepicker 
+            :class="formErrorMsgs.due_date ? 'input-error' : ''"
             v-model="task.due_date" 
             as-single
             :formatter="formatter"
@@ -47,17 +52,27 @@
             i18n="es"
             :disabled="!editing"
             />
+
+
         </div>
 
         <div class="border-b-2  py-4">
+
           <p>Familia</p>
+          <label v-if="editing" class="form-control">
+            <div v-if="formErrorMsgs.family" class="label">
+              <span class="label-text font-normal text-red-500"> {{ formErrorMsgs.family[0] }} </span>
+            </div>
+          </label>
           <SelectInput class="w-full" 
-            v-model="task.family.id"  
+            :class="formErrorMsgs.family ? 'select-error' : ''"
+            v-model="task.family"  
             label="Familia" 
             :options="families"
-            :selectedValue="task.family.id"
+            :selectedValue="task.family"
             :disabled="!editing"
           />
+
         </div>
         <div class="border-b-2 py-4 ">
           <p>Estado</p>
@@ -71,11 +86,12 @@
         </div>
        
        </aside>
-
-       
       </div>
 
   </div>
+
+  <ToastSuccess v-if="formSuccess" @click="formSuccess = false" msg="Tarea actualizada correctamente"/>
+  <ToastError v-if="formError" @click="formError = false" msg="Error al actualizar tarea"/>
 
 </template>
 
@@ -88,18 +104,21 @@ import { useStore } from '@/stores/store';
 import TextInput from './inputs/TextInput.vue';
 import SelectInput from './inputs/SelectInput.vue';
 import TextareaInput from './inputs/TextareaInput.vue';
+import ToastSuccess from './notifications/ToastSuccess.vue';
+import ToastError from './notifications/ToastError.vue';
 
 export default {
   data(){
     return {
       id: null,
       formatter: {
-        date: "DD/MM/YYYY",
+        date: "YYYY-MM-DD",
         month: "MMM",
       },
       editing: false,
-      formResponse: {},
-      formError: {}
+      formSuccess: false,
+      formError: false,
+      formErrorMsgs: {}
     }
   },
   components:{
@@ -107,16 +126,12 @@ export default {
     VueTailwindDatepicker,
     SelectInput,
     TextInput,
-    TextareaInput
+    TextareaInput,
+    ToastSuccess,
+    ToastError
   },
   computed:{
     ...mapState(useStore, ['task', 'states', 'families'])
-  },
-  async beforeMount(){
-    const route = useRoute()
-    this.id = route.params.id
-    await this.getTaskDetails(this.id)
-    await this.setFamilies()
   },
   methods: {
     ...mapActions(useStore, ['getTaskDetails', 'setFamilies', 'updateTaskDetails']),
@@ -124,21 +139,33 @@ export default {
       this.$router.back()
     },
     async editTask(){
-
-      if(this.editing) {
-        try {
-          this.formResponse = await this.updateTaskDetails(this.task)
+      this.editing = !this.editing
+        
+      if(!this.editing){
+        try {     
+          this.formSuccess = await this.updateTaskDetails(this.task)
+          this.formErrorMsgs = {}
+          this.formError = false
           this.editing = false
           
         } catch (error) {
-          this.formError = error.response.data
-          console.log(this.formError);
+          this.formErrorMsgs = error.response.data
+          this.formError = true
           this.editing = true
-        }      
+        }  
       }
-      this.editing = true
+      
+
     }
-  }
+  },
+  async beforeMount(){
+    const route = useRoute()
+    this.id = route.params.id
+
+    await this.getTaskDetails(this.id)
+    await this.setFamilies()
+  },
+
 }
 
 </script>

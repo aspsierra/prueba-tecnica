@@ -35,18 +35,9 @@ export const useStore = defineStore('main', {
             await debounceFilter(filters, order)
         },
         async getTaskDetails(id){
-            this.task = await this.api.getTaskDetails(id)
-            // if(this.task.due_date)
-            this.task.due_date = this.formatDate(this.task.due_date)
+            this.task = await this.api.getTaskData(id)
         },
-        formatDate(date){
-            return new Intl.DateTimeFormat("es-ES",{
-                day: "2-digit",
-                month: "2-digit",
-                year:"numeric"
-              }).format(new Date(date))
-        
-        },
+
         async updateTaskDetails(data){
             return await this.api.updateTask(data)
         }
