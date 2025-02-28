@@ -197,7 +197,10 @@ export default {
         this.editing = false
         this.newTask = false
         this.addSuccess = true
+        this.$router.push(`/task/${this.task.id}`)
       } catch (err) {
+        console.error(err);
+        
         this.formErrorMsgs = err.response.data
         
       }

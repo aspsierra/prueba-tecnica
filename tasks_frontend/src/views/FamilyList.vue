@@ -1,6 +1,12 @@
 <template>
     <main class="container px-40 pt-20 pb-10">
-        <h1 class="text-3xl text-white font-bold mb-5">Listado de Familias</h1>
+        <header class="flex justify-between mb-5">
+            <h1 class="text-3xl text-white font-bold mb-5">Listado de Familias</h1>
+            <RouterLink to="/task/new" @click="openModal" class="btn btn-active btn-primary">
+                <Icon icon="material-symbols:add-2-rounded" width="24" height="24" />
+                Añadir familia
+            </RouterLink>
+        </header>
 
         <FamilyListFilters
             :filters="filters"
@@ -26,6 +32,7 @@
 import FamilyOverview from '@/components/FamilyOverview.vue';
 import FamilyListFilters from '@/components/filters/FamilyListFilters.vue';
 import { useStore } from '@/stores/store';
+import { Icon } from '@iconify/vue';
 import _ from 'lodash';
 import { mapActions, mapState } from 'pinia';
 
@@ -44,7 +51,8 @@ export default {
     },
     components: {
         FamilyOverview,
-        FamilyListFilters
+        FamilyListFilters,
+        Icon
     },
     computed: {
         ...mapState(useStore, ['families']),
