@@ -34,7 +34,7 @@ De forma opcional, se puede usar el comando `python manage.py createsuperuser` p
 
 ## Frontend
 
-Desarrollado usando Vue.js 3.5 y Vite 6.1. Además, se usa [NVM](https://github.com/nvm-sh/nvm) como gestor de la versión de Node.js del proyecto
+Desarrollado usando Vue.js 3.5 y Vite 6.1. Para el estilo y apartado visual de la aplicación se usó [Tailwind 3.4](https://v3.tailwindcss.com/) y la biblioteca de componentes [DaisyUI](https://daisyui.com/). Además, se usa [NVM](https://github.com/nvm-sh/nvm) como gestor de la versión de Node.js del proyecto
 
 El backend de la aplicación está contenido en la carpeta **tasks_frontend**.
 
