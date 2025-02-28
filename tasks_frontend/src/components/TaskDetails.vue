@@ -2,27 +2,41 @@
 
   <div class="modal-box w-11/12 max-w-5xl h-screen p-0 flex flex-col overflow-visible">
     <form method="dialog" class=" flex justify-between items-center">
-      <p class="ml-10">{{ family.name }}</p>
+      <p class="ml-10">{{ task.family.name }}</p>
       <button @click="closeModal" class="btn btn-md btn-ghost m-2">
         <Icon icon="material-symbols:close" width="24" height="24" />
       </button>
     </form>
 
-    <div class="border-t-2 flex h-full">
-      <main class="">
+    <div class="border-t-2 flex h-full justify-between">
+      <main class=" w-full">
         <p class="text-xl font-bold text-white my-5 m-10">{{ task.title }}</p>
         <p class="text-lg m-10">
           {{ task.description }}
         </p>
       </main>
-      <aside class="w-80 bg-slate-800 px-4">
+
+
+      <aside class="w-80 max-w-xs bg-slate-800 px-4">
         <div class="border-b-2  py-4">
           <p>Familia</p>
-          <p>{{ family.name }}</p>
+          <SelectInput class="w-full" 
+            v-model="task.family.id"  
+            label="Familia" 
+            :options="families"
+            :selectedValue="task.family.id"
+            :disabled="!editing"
+          />
         </div>
-        <div class="border-b-2 py-4">
+        <div class="border-b-2 py-4 ">
           <p>Estado</p>
-          <p>{{ task.state }}</p>
+          <SelectInput class="w-full" 
+            v-model="task.state"  
+            label="Estado" 
+            :options="states"
+            :selectedValue="task.state_full.value"
+            :disabled="!editing"
+          />
         </div>
         <div class="border-b-2  py-4">
           <p>Fecha de vencimiento</p>
@@ -38,7 +52,8 @@
         </div>
        </aside>
 
-    </div>
+       
+      </div>
 
   </div>
 
@@ -56,14 +71,11 @@ export default {
   data(){
     return {
       id: null,
-      //task: {},
-      family: {},
-      state: {},
       formatter: {
         date: "DD/MM/YYYY",
         month: "MMM",
       },
-      dueDate: ''
+      editing: false
     }
   },
   components:{
@@ -72,25 +84,16 @@ export default {
     SelectInput
   },
   computed:{
-    ...mapState(useStore, ['task'])
+    ...mapState(useStore, ['task', 'states', 'families'])
   },
-  async mounted(){
+  async beforeMount(){
     const route = useRoute()
     this.id = route.params.id
     await this.getTaskDetails(this.id)
-    
-    //await this.fetchFamily()
+    await this.setFamilies()
   },
   methods: {
-    ...mapActions(useStore, ['getTaskDetails']),
-    async fetchFamily() {
-      //this.family = await this.$api.getSingleFamily(this.task.family)
-      console.log(this.family);
-      
-    },
-    async fetchStates(){
-
-    },
+    ...mapActions(useStore, ['getTaskDetails', 'setFamilies']),
     closeModal() {
       this.$router.back()
     },

@@ -67,8 +67,4 @@ export class Api {
         return await this.getQuery(this.baseApiUrl + `task-detail/${id}`)
     }
 
-    async getSingleFamily(id){
-        return await this.getQuery(this.baseApiUrl + `families/${id}`)
-    }
-
 }

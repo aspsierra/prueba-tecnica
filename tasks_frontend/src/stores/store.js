@@ -36,6 +36,7 @@ export const useStore = defineStore('main', {
         },
         async getTaskDetails(id){
             this.task = await this.api.getTaskDetails(id)
+            // if(this.task.due_date)
             this.task.due_date = this.formatDate(this.task.due_date)
         },
         formatDate(date){
