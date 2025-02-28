@@ -74,9 +74,6 @@ export default {
     },
     methods: {
         ...mapActions(useStore, ['filterTasks', 'setTasks', 'setFamilies']),
-        async fetchTasks(filters = this.filters, order = this.ordering) {
-            this.tasks = await this.$api.getAllTasks(filters, order)
-        },
         resetFilters() {
             Object.assign(this.filters, _.cloneDeep(this.initialFilters));
         },

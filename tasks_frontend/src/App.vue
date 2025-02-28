@@ -16,5 +16,17 @@
 
 
 <script>
-  import { RouterLink, RouterView } from 'vue-router'
+  import { mapActions } from 'pinia';
+import { RouterLink, RouterView } from 'vue-router'
+import { useStore } from './stores/store';
+
+  export default {
+
+    async mounted(){
+      this.setStates()
+    },
+    methods: {
+      ...mapActions(useStore, ['setStates'])
+    },
+  }
 </script>

@@ -7,6 +7,7 @@ export const useStore = defineStore('main', {
         families: [],
         states: [],
         tasks: [],
+        task: {},
         api: new Api()
     }),
     actions: {
@@ -32,6 +33,18 @@ export const useStore = defineStore('main', {
             }, 300)
 
             await debounceFilter(filters, order)
+        },
+        async getTaskDetails(id){
+            this.task = await this.api.getTaskDetails(id)
+            this.task.due_date = this.formatDate(this.task.due_date)
+        },
+        formatDate(date){
+            return new Intl.DateTimeFormat("es-ES",{
+                day: "2-digit",
+                month: "2-digit",
+                year:"numeric"
+              }).format(new Date(date))
+        
         }
     }
 })
