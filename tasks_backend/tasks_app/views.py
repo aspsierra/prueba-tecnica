@@ -1,10 +1,11 @@
 from rest_framework import viewsets, filters, status
 from django_filters.rest_framework import DjangoFilterBackend
 from .models import Family, Task
-from .serializers import FamilySerializer, TaskSerializer, TaskListSerializer
+from .serializers import FamilySerializer, TaskReadSerializer, TaskListSerializer, TaskWriteSerializer
 from .filters import TaskListFilter, FamilyListFilter
 from rest_framework.decorators import api_view, action
 from rest_framework.response import Response
+
 
 class FamilyViewSet(viewsets.ModelViewSet):
     queryset = Family.objects.all()
@@ -23,7 +24,26 @@ class TaskListViewSet(viewsets.ModelViewSet):
 
 class TaskViewSet(viewsets.ModelViewSet):
     queryset = Task.objects.all()
-    serializer_class = TaskSerializer
+
+    def get_serializer_class(self):
+        if self.action in ['list', 'retrieve']:
+            return TaskReadSerializer
+        return TaskWriteSerializer
+    
+    @action(detail=True, methods=['put'], url_path='update')
+    def update_task(self, request, pk=None):
+        task = self.get_object()
+        serializer = TaskWriteSerializer(task, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    @action(detail=True, methods=['delete'], url_path='delete')
+    def delete_task(self, request, pk=None):
+        task = self.get_object()
+        task.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
     @action(detail=False, methods=['post'], url_path='create-task')
     def create_task(self, request):
