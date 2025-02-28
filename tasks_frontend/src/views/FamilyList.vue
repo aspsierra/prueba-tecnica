@@ -25,13 +25,14 @@
 <script>
 import FamilyOverview from '@/components/FamilyOverview.vue';
 import FamilyListFilters from '@/components/filters/FamilyListFilters.vue';
+import { useStore } from '@/stores/store';
 import _ from 'lodash';
+import { mapActions, mapState } from 'pinia';
 
 
 export default {
     data(){
         return {
-            families: [],
             filters: {
                 name: '',
             },
@@ -45,26 +46,26 @@ export default {
         FamilyOverview,
         FamilyListFilters
     },
+    computed: {
+        ...mapState(useStore, ['families']),
+    },
     watch: {
         filters: {
-            handler: _.debounce(async function (newFilters) {
-                await this.fetchFamilies(newFilters, this.ordering)
-            }, 300),
+            handler: function(newFilters) {
+                this.filterFamilies(newFilters, this.ordering)
+            },
             deep: true
         }
     },
-    async mounted(){
-        await this.fetchFamilies()
-    },
     methods: {
-        async fetchFamilies(filters=this.filters, order=this.ordering){
-            this.families = await this.$api.getFamilies(filters, order)
-        },
+        ...mapActions(useStore, ['filterFamilies', 'setFamilies']),
         async orderTable(orderBy){
             this.ordering= orderBy 
-            await this.fetchFamilies()
-            
+            await this.setFamilies(this.filters, this.ordering)
         }
+    },
+    mounted() {
+        this.setFamilies({}, 'name')
     }
 
 }

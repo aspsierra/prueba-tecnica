@@ -26,15 +26,13 @@
 import { RouterLink, RouterView } from 'vue-router'
 import TaskListFilters from '@/components/filters/TaskListFilters.vue';
 import TaskOverview from '@/components/TaskOverview.vue';
-import _ from 'lodash'
+import { mapActions, mapState } from 'pinia';
+import { useStore } from '@/stores/store';
 
 
 export default {
     data() {
         return {
-            tasks: [],
-            families: [],
-            states: [],
             filters: {
                 family: null,
                 title: null,
@@ -63,21 +61,19 @@ export default {
         TaskOverview,
         TaskListFilters
     },
-    async mounted() {
-        //this.$refs.detailsModal.close()
-        this.fetchTasks()
-        this.families = await this.$api.getFamilies()
-        this.states = await this.$api.getStates()
+    computed: {
+        ...mapState(useStore, ['families', 'states', 'tasks'])
     },
     watch: {
         filters: {
-            handler: _.debounce(async function (newFilters) {
-                await this.fetchTasks(newFilters, this.ordering)
-            }, 300),
+            handler:  function (newFilters) {
+                this.filterTasks(newFilters, this.ordering)
+            },
             deep: true
         }
     },
     methods: {
+        ...mapActions(useStore, ['filterTasks', 'setTasks', 'setFamilies']),
         async fetchTasks(filters = this.filters, order = this.ordering) {
             this.tasks = await this.$api.getAllTasks(filters, order)
         },
@@ -86,11 +82,15 @@ export default {
         },
         async orderTable(orderBy) {
             this.ordering = orderBy
-            await this.fetchTasks()
+            await this.setTasks(this.filters, this.ordering)    
         },
         openModal(){
             this.$refs.detailsModal.showModal()   
         }
+    },
+    mounted() {
+        this.setTasks({}, 'due_date')
+        this.setFamilies({}, 'name')
     }
 }
 
