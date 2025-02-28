@@ -46,6 +46,9 @@ export const useStore = defineStore('main', {
                 year:"numeric"
               }).format(new Date(date))
         
+        },
+        async updateTaskDetails(data){
+            return await this.api.updateTask(data)
         }
     }
 })

@@ -18,8 +18,15 @@
       <main class="w-full h-full">
         <div class="my-5 m-10 text-xl font-bold text-white ">
           <p v-if="!editing">{{ task.title }}</p>
-          <TextInput v-if="editing"  class="w-full" v-model="task.title" label="Título de la tarea" :value="task.title"/>
+
+          <label v-if="editing" class="form-control">
+            <div v-if="formError.family" class="label">
+              <span class="label-text font-normal text-red-500"> {{ formError.family[0] }} </span>
+            </div>
+            <TextInput  class="w-full" :class="formError.family ? 'input-error' : ''" v-model="task.title" label="Título de la tarea" :value="task.title"/>
+          </label>
         </div>
+
         <div class="text-lg m-10 h-72">
           <p v-if="!editing" class="">
             {{ task.description }}
@@ -90,7 +97,9 @@ export default {
         date: "DD/MM/YYYY",
         month: "MMM",
       },
-      editing: false
+      editing: false,
+      formResponse: {},
+      formError: {}
     }
   },
   components:{
@@ -110,13 +119,24 @@ export default {
     await this.setFamilies()
   },
   methods: {
-    ...mapActions(useStore, ['getTaskDetails', 'setFamilies']),
+    ...mapActions(useStore, ['getTaskDetails', 'setFamilies', 'updateTaskDetails']),
     closeModal() {
       this.$router.back()
     },
-    editTask(){
-      console.log('ejja');
-      this.editing = !this.editing
+    async editTask(){
+
+      if(this.editing) {
+        try {
+          this.formResponse = await this.updateTaskDetails(this.task)
+          this.editing = false
+          
+        } catch (error) {
+          this.formError = error.response.data
+          console.log(this.formError);
+          this.editing = true
+        }      
+      }
+      this.editing = true
     }
   }
 }

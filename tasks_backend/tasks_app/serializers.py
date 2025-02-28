@@ -23,8 +23,8 @@ class TaskReadSerializer(serializers.ModelSerializer):
 
     
 class TaskWriteSerializer(serializers.ModelSerializer):
-    family = serializers.PrimaryKeyRelatedField(queryset=Family.objects.all())
-   
+    # family = serializers.PrimaryKeyRelatedField(queryset=Family.objects.all())
+    family = FamilySerializer()
     class Meta:
         model = Task
         fields = '__all__'
