@@ -39,7 +39,7 @@ export default {
     data(){
         return {
             formatter: {
-                date: "YYYY-MM_AA",
+                date: "YYYY-MM-DD",
                 month: "MMM",
             },
             order: false,

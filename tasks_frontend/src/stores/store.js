@@ -7,10 +7,25 @@ export const useStore = defineStore('main', {
         families: [],
         states: [],
         tasks: [],
-        task: {},
+        task: {
+            "family": null,
+            "title": "",
+            "description": "",
+            "state": "",
+            "due_date": null        
+        },
         api: new Api()
     }),
     actions: {
+        resetTask() {
+            this.task = {
+                "family": null,
+                "title": "",
+                "description": "",
+                "state": "",
+                "due_date": null        
+            }
+        },
         async setFamilies(params={}, ordering = ''){
             this.families = await this.api.getFamilies(params, ordering)
         },
@@ -42,9 +57,11 @@ export const useStore = defineStore('main', {
             return await this.api.updateTask(data)
         },
         async deleteSelectedTask(){
-            console.log('en store');
-            
+            console.log('en store');    
             return await this.api.deleteTask(this.task.id)
+        },
+        async addNewTask(data){
+            return await this.api.addTask(data)
         }
     }
 })

@@ -18,6 +18,16 @@ export class Api {
             })
     }
 
+    async postQuery(URL, data) {
+        return axios    
+            .post(URL, data)
+            .then(response => response.data)
+            .catch(err => {
+                console.error('POST request failed', err)
+                throw err
+            })
+    }
+
     async putQuery(URL, data, headers=this.headers){
         return await axios
             .put(URL, data)
@@ -33,7 +43,7 @@ export class Api {
             .delete(URL)
             .then(response => true)
             .catch(err => {
-                console.error('PUT request failed', err)
+                console.error('DELETE request failed', err)
                 throw err
             })
     }
@@ -88,13 +98,16 @@ export class Api {
     }
 
     async updateTask(data){
-        console.log(data);
         return await this.putQuery(this.baseApiUrl + `task-detail/${data.id}/update/`, data)
     }
 
     async deleteTask(id) {
-        console.log('aca');
-        
         return await this.deleteQuery(this.baseApiUrl + `task-detail/${id}/delete/`)
+    }
+
+    async addTask(data){
+        console.log(data);
+        
+        return await this.postQuery(this.baseApiUrl + 'task-detail/create-task/', data)
     }
 }

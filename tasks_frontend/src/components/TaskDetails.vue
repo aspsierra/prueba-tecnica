@@ -3,11 +3,14 @@
   <div class="modal-box w-11/12 max-w-5xl h-screen p-0 flex flex-col overflow-visible">
     <form method="dialog">
       <div class="w-full text-right">
-        <div @click="editTask" class="btn btn-md btn-info m-2">
+        <div v-if="newTask" @click="addTask" class="btn btn-md btn-info m-2">
+          <Icon icon="material-symbols:add-2-rounded" width="24" height="24" />     
+        </div>
+        <div v-if="!newTask" @click="editTask" class="btn btn-md btn-info m-2">
           <Icon v-if="!editing" icon="material-symbols:edit-outline-rounded" width="24" height="24" />
           <Icon v-if="editing" icon="material-symbols:check-rounded" width="24" height="24" />        
         </div>
-        <div onclick="confirmationModal.showModal()" class="btn btn-md btn-error m-2">
+        <div v-if="!newTask" onclick="confirmationModal.showModal()" class="btn btn-md btn-error m-2">
           <Icon icon="material-symbols:delete-outline-rounded" width="24" height="24" />      
         </div>
         <button @click="closeModal" class="btn btn-md btn-ghost m-2" ref="closeDetails">
@@ -83,7 +86,7 @@
             v-model="task.state"  
             label="Estado" 
             :options="states"
-            :selectedValue="task.state_full.value"
+            :selectedValue="task.state"
             :disabled="!editing"
           />
         </div>
@@ -93,8 +96,8 @@
 
   </div>
 
-  <ToastSuccess v-if="formSuccess" @click="formSuccess = false" msg="Tarea actualizada correctamente"/>
-  <ToastError v-if="formError" @click="formError = false" msg="Error al actualizar tarea"/>
+  <ToastSuccess v-if="editSuccess" @click="editSuccess = false" msg="Tarea actualizada correctamente"/>
+  <ToastError v-if="editError" @click="editError = false" msg="Error al actualizar tarea"/>
   <ToastError v-if="deleteError" @click="deleteError = false" msg="Error al eliminar tarea"/>
 
 
@@ -133,10 +136,13 @@ export default {
         month: "MMM",
       },
       editing: false,
-      formSuccess: false,
-      formError: false,
+      editSuccess: false,
+      addSuccess: false,
+      editError: false,
+      addError:false,
+      deleteError: false,
       formErrorMsgs: {},
-      deleteError: false
+      newTask: false,
     }
   },
   components:{
@@ -152,7 +158,7 @@ export default {
     ...mapState(useStore, ['task', 'states', 'families'])
   },
   methods: {
-    ...mapActions(useStore, ['setTasks', 'getTaskDetails', 'setFamilies', 'updateTaskDetails', 'deleteSelectedTask']),
+    ...mapActions(useStore, ['resetTask', 'addNewTask', 'setTasks', 'getTaskDetails', 'setFamilies', 'updateTaskDetails', 'deleteSelectedTask']),
     closeModal() {
       this.$router.back()
     },
@@ -161,21 +167,19 @@ export default {
         
       if(!this.editing){
         try {     
-          this.formSuccess = await this.updateTaskDetails(this.task)
+          this.editSuccess = await this.updateTaskDetails(this.task)
           this.formErrorMsgs = {}
-          this.formError = false
+          this.editError = false
           this.editing = false
           
         } catch (error) {
           this.formErrorMsgs = error.response.data
-          this.formError = true
+          this.editError = true
           this.editing = true
         }  
       }
     },
     async deleteTask(){
-      console.log('¿¿¿???');
-      
       try{
         await this.deleteSelectedTask()
         this.$refs.closeModalBtn.click()
@@ -186,17 +190,34 @@ export default {
         console.error(err);
         this.deleteError = true
       }
+    },
+    async addTask(){
+      try{
+        await this.addNewTask(this.task)
+        this.editing = false
+        this.newTask = false
+        this.addSuccess = true
+      } catch (err) {
+        this.formErrorMsgs = err.response.data
+        
+      }
     }
   },
   async beforeMount(){
     const route = useRoute()
-    this.id = route.params.id
+    console.log(route);
 
-    await this.getTaskDetails(this.id)
+    if (route.fullPath != '/task/new'){
+      this.id = route.params.id
+      await this.getTaskDetails(this.id)
+    } else {
+      this.editing = true
+      this.newTask = true
+    }
     await this.setFamilies()
   },
   async unmounted(){
-    console.log('puedeser ??');
+    this.resetTask()
     await this.setTasks({}, 'due_date')
   }
 

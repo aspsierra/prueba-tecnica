@@ -1,6 +1,7 @@
 <template>
     <main class="container px-40 pt-20 pb-10">
         <h1 class="text-3xl text-white font-bold mb-5">Listado de Tareas</h1>
+        <RouterLink to="/task/new" @click="openModal" class="btn">Añadir tarea</RouterLink>
 
         <TaskListFilters :filters="filters" :resetFilters="initialFilters" :families="families" :states="states"
             @clearFilters="resetFilters" @order="orderTable" />
