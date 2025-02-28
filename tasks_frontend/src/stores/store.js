@@ -17,7 +17,7 @@ export const useStore = defineStore('main', {
         async setStates(){
             this.states = await this.api.getStates()
         },
-        async setTasks(params={}, ordering = '') {
+        async setTasks(params={}, ordering='') {
             this.tasks = await this.api.getAllTasks(params, ordering)
         },
         async filterTasks(filters, order){
@@ -40,6 +40,11 @@ export const useStore = defineStore('main', {
 
         async updateTaskDetails(data){
             return await this.api.updateTask(data)
+        },
+        async deleteSelectedTask(){
+            console.log('en store');
+            
+            return await this.api.deleteTask(this.task.id)
         }
     }
 })

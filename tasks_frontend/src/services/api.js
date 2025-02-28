@@ -28,6 +28,16 @@ export class Api {
             })
     }
 
+    async deleteQuery(URL){
+        return await axios
+            .delete(URL)
+            .then(response => true)
+            .catch(err => {
+                console.error('PUT request failed', err)
+                throw err
+            })
+    }
+
     formatQueryParams(params, order) {
         let searchFilters = {}
         for (const [key, value] of Object.entries(params)) {      
@@ -80,6 +90,11 @@ export class Api {
     async updateTask(data){
         console.log(data);
         return await this.putQuery(this.baseApiUrl + `task-detail/${data.id}/update/`, data)
+    }
 
+    async deleteTask(id) {
+        console.log('aca');
+        
+        return await this.deleteQuery(this.baseApiUrl + `task-detail/${id}/delete/`)
     }
 }

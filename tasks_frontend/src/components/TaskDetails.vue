@@ -7,7 +7,10 @@
           <Icon v-if="!editing" icon="material-symbols:edit-outline-rounded" width="24" height="24" />
           <Icon v-if="editing" icon="material-symbols:check-rounded" width="24" height="24" />        
         </div>
-        <button @click="closeModal" class="btn btn-md btn-ghost m-2">
+        <div onclick="confirmationModal.showModal()" class="btn btn-md btn-error m-2">
+          <Icon icon="material-symbols:delete-outline-rounded" width="24" height="24" />      
+        </div>
+        <button @click="closeModal" class="btn btn-md btn-ghost m-2" ref="closeDetails">
           <Icon icon="material-symbols:close" width="24" height="24" />
         </button>
       </div>
@@ -92,6 +95,20 @@
 
   <ToastSuccess v-if="formSuccess" @click="formSuccess = false" msg="Tarea actualizada correctamente"/>
   <ToastError v-if="formError" @click="formError = false" msg="Error al actualizar tarea"/>
+  <ToastError v-if="deleteError" @click="deleteError = false" msg="Error al eliminar tarea"/>
+
+
+  <dialog id="confirmationModal" class="modal">
+  <div class="modal-box">
+    <p class="py-4">¿Seguro que quieres eliminar esta tarea?</p>
+    <div class="modal-action">
+      <form method="dialog">
+        <div class="btn w-20 btn-error mr-2" @click="deleteTask">Si</div>
+        <button  ref="closeModalBtn" class="btn w-20 btn-accent">No</button>
+      </form>
+    </div>
+  </div>
+</dialog>
 
 </template>
 
@@ -118,7 +135,8 @@ export default {
       editing: false,
       formSuccess: false,
       formError: false,
-      formErrorMsgs: {}
+      formErrorMsgs: {},
+      deleteError: false
     }
   },
   components:{
@@ -134,7 +152,7 @@ export default {
     ...mapState(useStore, ['task', 'states', 'families'])
   },
   methods: {
-    ...mapActions(useStore, ['getTaskDetails', 'setFamilies', 'updateTaskDetails']),
+    ...mapActions(useStore, ['setTasks', 'getTaskDetails', 'setFamilies', 'updateTaskDetails', 'deleteSelectedTask']),
     closeModal() {
       this.$router.back()
     },
@@ -154,8 +172,20 @@ export default {
           this.editing = true
         }  
       }
+    },
+    async deleteTask(){
+      console.log('¿¿¿???');
       
-
+      try{
+        await this.deleteSelectedTask()
+        this.$refs.closeModalBtn.click()
+        this.deleteError = false
+        this.$refs.closeDetails.click()
+        this.closeModal()
+      } catch(err) {
+        console.error(err);
+        this.deleteError = true
+      }
     }
   },
   async beforeMount(){
@@ -165,6 +195,11 @@ export default {
     await this.getTaskDetails(this.id)
     await this.setFamilies()
   },
+  async unmounted(){
+    console.log('puedeser ??');
+    await this.setTasks({}, 'due_date')
+  }
+
 
 }
 
