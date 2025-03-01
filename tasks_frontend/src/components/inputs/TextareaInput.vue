@@ -20,10 +20,10 @@ export default {
             this.$emit('update:modelValue', event.target.value)
         }
     },
-    mounted(){
-        console.log(this.label);
+    // mounted(){
+    //     console.log(this.label);
         
-    }
+    // }
 
 }
 

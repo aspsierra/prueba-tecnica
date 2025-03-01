@@ -28,6 +28,14 @@ const router = createRouter({
       path: '/families',
       name: 'familyList',
       component: FamilyList,
+      children: [
+      ]
+    },
+    {
+      path: '/family/:id',
+      name: 'tasksByFamily',
+      component: TasksList,
+      props: true
     },
   ],
 })

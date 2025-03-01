@@ -155,12 +155,12 @@ export default {
     ToastError
   },
   computed:{
-    ...mapState(useStore, ['task', 'states', 'families'])
+    ...mapState(useStore, ['task', 'states', 'families', 'fromRoute'])
   },
   methods: {
     ...mapActions(useStore, ['resetTask', 'addNewTask', 'setTasks', 'getTaskDetails', 'setFamilies', 'updateTaskDetails', 'deleteSelectedTask']),
     closeModal() {
-      this.$router.back()
+      this.$router.push(this.fromRoute)
     },
     async editTask(){
       this.editing = !this.editing
@@ -171,7 +171,6 @@ export default {
           this.formErrorMsgs = {}
           this.editError = false
           this.editing = false
-          
         } catch (error) {
           this.formErrorMsgs = error.response.data
           this.editError = true
@@ -221,7 +220,7 @@ export default {
   },
   async unmounted(){
     this.resetTask()
-    await this.setTasks({}, 'due_date')
+    //await this.setTasks({}, 'due_date')
   }
 
 

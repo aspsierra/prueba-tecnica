@@ -8,14 +8,18 @@ export const useStore = defineStore('main', {
         states: [],
         tasks: [],
         task: {
-            "due_date": ""        
+            // "due_date": ""        
         },
-        api: new Api()
+        api: new Api(),
+        fromRoute: "/"
     }),
     actions: {
+        setFromRoute(route){
+            this.fromRoute = route
+        },
         resetTask() {
             this.task = {
-                "due_date": ""        
+                // "due_date": ""        
             }
         },
         async setFamilies(params={}, ordering = ''){
@@ -25,6 +29,7 @@ export const useStore = defineStore('main', {
             this.states = await this.api.getStates()
         },
         async setTasks(params={}, ordering='') {
+            console.trace()
             this.tasks = await this.api.getAllTasks(params, ordering)
         },
         async filterTasks(filters, order){
