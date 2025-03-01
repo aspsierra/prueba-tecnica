@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -25,9 +26,6 @@ SECRET_KEY = 'django-insecure-qcg)&3#2uk^!#7g*vsoz-&o#kc$94e1k_69+uo_j6mqng*hcyh
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -37,6 +35,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'django_filters',
+    'tasks_app',
+    'corsheaders'
 ]
 
 MIDDLEWARE = [
@@ -47,6 +49,9 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
+
 ]
 
 ROOT_URLCONF = 'tasks_backend.urls'
@@ -76,7 +81,7 @@ WSGI_APPLICATION = 'tasks_backend.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': BASE_DIR / 'prueba_tecnica.sqlite3',
     }
 }
 
@@ -99,13 +104,32 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(BASE_DIR, 'logs/mi_proyecto.log'),
+        },
+    },
+    'root': {
+        'handlers': ['file'],
+        'level': 'DEBUG',
+    },
+}
+
+log_dir = os.path.dirname(LOGGING['handlers']['file']['filename'])
+if log_dir:
+    os.makedirs(log_dir, exist_ok=True)
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'es-ES'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Madrid'
 
 USE_I18N = True
 
@@ -121,3 +145,15 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+ALLOWED_HOSTS = [
+    'localhost',
+    '127.0.0.1',
+]
+
+CORS_ALLOWED_ORIGINS = [
+    'http://127.0.0.1:5173',
+    'http://localhost:5173'
+]
+
