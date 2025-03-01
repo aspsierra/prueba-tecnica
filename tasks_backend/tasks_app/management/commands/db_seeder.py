@@ -23,7 +23,7 @@ class Command(BaseCommand):
                 due_date=fake.date_between(start_date='today', end_date="+30d")
             )
 
-        self.stdout.write(self.style.SUCCESS("Base de datos poblada exitosamente!"))
+        self.stdout.write(self.style.SUCCESS("Base de datos poblada con exito"))
 
 
 

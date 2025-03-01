@@ -5,6 +5,7 @@ from .serializers import FamilySerializer, TaskReadSerializer, TaskListSerialize
 from .filters import TaskListFilter, FamilyListFilter
 from rest_framework.decorators import api_view, action
 from rest_framework.response import Response
+from .permissions import IsAdminOrReadOnly
 
 
 class FamilyViewSet(viewsets.ModelViewSet):
@@ -13,6 +14,7 @@ class FamilyViewSet(viewsets.ModelViewSet):
     filter_backends = [filters.OrderingFilter, DjangoFilterBackend]
     filterset_class = FamilyListFilter
     ordering_fields = ['name']
+    permission_classes=[IsAdminOrReadOnly]
 
 
 class TaskListViewSet(viewsets.ModelViewSet):
@@ -21,14 +23,22 @@ class TaskListViewSet(viewsets.ModelViewSet):
     filter_backends = [filters.OrderingFilter, filters.SearchFilter, DjangoFilterBackend]
     filterset_class = TaskListFilter
     ordering_fields = ['state', 'due_date']
+    permission_classes=[IsAdminOrReadOnly]
+
 
 class TaskViewSet(viewsets.ModelViewSet):
     queryset = Task.objects.all()
+    permission_classes=[IsAdminOrReadOnly]
 
     def get_serializer_class(self):
         if self.action in ['list', 'retrieve']:
             return TaskReadSerializer
         return TaskWriteSerializer
+    
+    # def get_permissions(self):
+    #     if self.action in ['list', 'retrieve']:
+    #         return [] 
+    #     return [IsAdminOrReadOnly] 
     
     @action(detail=True, methods=['put'], url_path='update')
     def update_task(self, request, pk=None):
