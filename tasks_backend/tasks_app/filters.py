@@ -13,9 +13,10 @@ class TaskListFilter(django_filters.FilterSet):
             
 class FamilyListFilter(django_filters.FilterSet):
     name = django_filters.CharFilter(field_name="name", lookup_expr='icontains')
+    id = django_filters.NumberFilter(field_name="id", lookup_expr='exact')
 
     class Meta:
         model= Family
-        fields = ['name']
+        fields = ['name', 'id']
             
         

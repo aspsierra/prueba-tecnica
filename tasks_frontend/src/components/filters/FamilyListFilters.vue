@@ -3,7 +3,6 @@
     <div class="flex mb-2 gap-2">
 
         <TextInput v-model="filters.name" label="Nombre de la familia"/>
-        <BtnClear tooltip="Eliminar filtros" @clear="clearFilters"/>
     </div>
 
     <div class="w-full">
@@ -17,7 +16,6 @@
 
 <script>
 import { Icon } from '@iconify/vue';
-import BtnClear from '../inputs/BtnClear.vue';
 import TextInput from '../inputs/TextInput.vue';
 
 
@@ -33,7 +31,6 @@ export default {
     },
     components: {
         TextInput,
-        BtnClear,
         Icon
     },
     computed:{

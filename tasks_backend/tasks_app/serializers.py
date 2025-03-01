@@ -10,17 +10,21 @@ class FamilySerializer(serializers.ModelSerializer):
 
 
 class TaskReadSerializer(serializers.ModelSerializer):
-    family = FamilySerializer()
+    family = serializers.PrimaryKeyRelatedField(queryset=Family.objects.all())    
+    state_full = serializers.SerializerMethodField()
    
     class Meta:
         model = Task
         fields = '__all__'
         read_only_fields = ('creation_date',)
 
+    def get_state_full(self, obj):
+        return {'value': obj.state, 'display': obj.get_state_display()}
+
     
 class TaskWriteSerializer(serializers.ModelSerializer):
     family = serializers.PrimaryKeyRelatedField(queryset=Family.objects.all())
-   
+    # family = FamilySerializer()
     class Meta:
         model = Task
         fields = '__all__'

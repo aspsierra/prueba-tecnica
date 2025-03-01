@@ -1,6 +1,12 @@
 <template>
     <main class="container px-40 pt-20 pb-10">
-        <h1 class="text-3xl text-white font-bold mb-5">Listado de Familias</h1>
+        <header class="flex justify-between mb-5">
+            <h1 class="text-3xl text-white font-bold mb-5">Listado de Familias</h1>
+            <RouterLink @click="openModal" class="btn btn-active btn-primary">
+                <Icon icon="material-symbols:add-2-rounded" width="24" height="24" />
+                Añadir familia
+            </RouterLink>
+        </header>
 
         <FamilyListFilters
             :filters="filters"
@@ -12,7 +18,9 @@
         <div class="mt-5">
             <div >
                 <div v-for="family in families" class="cursor-pointer border-gray-500 hover:brightness-75 border-b-2 mb-2">      
-                    <FamilyOverview :family="family"/>
+                    <RouterLink :to="`/family/${family.id}`">
+                        <FamilyOverview :family="family"/>
+                    </RouterLink>
                 </div>
             </div>
         </div>
@@ -25,13 +33,16 @@
 <script>
 import FamilyOverview from '@/components/FamilyOverview.vue';
 import FamilyListFilters from '@/components/filters/FamilyListFilters.vue';
+import { useStore } from '@/stores/store';
+import { Icon } from '@iconify/vue';
 import _ from 'lodash';
+import { mapActions, mapState } from 'pinia';
+import { RouterLink } from 'vue-router';
 
 
 export default {
     data(){
         return {
-            families: [],
             filters: {
                 name: '',
             },
@@ -43,28 +54,29 @@ export default {
     },
     components: {
         FamilyOverview,
-        FamilyListFilters
+        FamilyListFilters,
+        Icon
+    },
+    computed: {
+        ...mapState(useStore, ['families']),
     },
     watch: {
         filters: {
-            handler: _.debounce(async function (newFilters) {
-                await this.fetchFamilies(newFilters, this.ordering)
-            }, 300),
+            handler: function(newFilters) {
+                this.filterFamilies(newFilters, this.ordering)
+            },
             deep: true
         }
     },
-    async mounted(){
-        await this.fetchFamilies()
-    },
     methods: {
-        async fetchFamilies(filters=this.filters, order=this.ordering){
-            this.families = await this.$api.getFamilies(filters, order)
-        },
+        ...mapActions(useStore, ['filterFamilies', 'setFamilies']),
         async orderTable(orderBy){
             this.ordering= orderBy 
-            await this.fetchFamilies()
-            
+            await this.setFamilies(this.filters, this.ordering)
         }
+    },
+    mounted() {
+        this.setFamilies({}, 'name')
     }
 
 }
