@@ -4,14 +4,15 @@
     <form method="dialog">
       <div class="w-full text-right">
         <div v-if="newTask" @click="addTask" class="btn btn-md btn-info m-2">
-          <Icon icon="material-symbols:add-2-rounded" width="24" height="24" />     
+          <Icon icon="material-symbols:add-2-rounded" width="24" height="24" />
         </div>
-        <div v-if="!newTask" @click="editTask" class="btn btn-md btn-info m-2">
+        <div v-if="!newTask" @click="editTask" class="btn btn-md btn-info m-2" :class="user.pk ? '' : 'btn-disabled'">
           <Icon v-if="!editing" icon="material-symbols:edit-outline-rounded" width="24" height="24" />
-          <Icon v-if="editing" icon="material-symbols:check-rounded" width="24" height="24" />        
+          <Icon v-if="editing" icon="material-symbols:check-rounded" width="24" height="24" />
         </div>
-        <div v-if="!newTask" onclick="confirmationModal.showModal()" class="btn btn-md btn-error m-2">
-          <Icon icon="material-symbols:delete-outline-rounded" width="24" height="24" />      
+        <div v-if="!newTask" onclick="confirmationModal.showModal()" class="btn btn-md btn-error m-2"
+          :class="user.pk ? '' : 'btn-disabled'">
+          <Icon icon="material-symbols:delete-outline-rounded" width="24" height="24" />
         </div>
         <button @click="closeModal" class="btn btn-md btn-ghost m-2" ref="closeDetails">
           <Icon icon="material-symbols:close" width="24" height="24" />
@@ -28,7 +29,8 @@
             <div v-if="formErrorMsgs.title" class="label">
               <span class="label-text font-normal text-red-500"> {{ formErrorMsgs.title[0] }} </span>
             </div>
-            <TextInput  class="w-full" :class="formErrorMsgs.title ? 'input-error' : ''" v-model="task.title" label="Título de la tarea" :value="task.title"/>
+            <TextInput class="w-full" :class="formErrorMsgs.title ? 'input-error' : ''" v-model="task.title"
+              label="Título de la tarea" :value="task.title" />
           </label>
         </div>
 
@@ -36,7 +38,7 @@
           <p v-if="!editing" class="">
             {{ task.description }}
           </p>
-          <TextareaInput v-if="editing" v-model="task.description" class="w-full" label="Descripción de la tarea"/>
+          <TextareaInput v-if="editing" v-model="task.description" class="w-full" label="Descripción de la tarea" />
         </div>
       </main>
 
@@ -49,15 +51,8 @@
               <span class="label-text font-normal text-red-500"> {{ formErrorMsgs.due_date[0] }} </span>
             </div>
           </label>
-          <vue-tailwind-datepicker 
-            :class="formErrorMsgs.due_date ? 'input-error' : ''"
-            v-model="task.due_date" 
-            as-single
-            :formatter="formatter"
-            :shortcuts="false"
-            i18n="es"
-            :disabled="!editing"
-            />
+          <vue-tailwind-datepicker :class="formErrorMsgs.due_date ? 'input-error' : ''" v-model="task.due_date"
+            as-single :formatter="formatter" :shortcuts="false" i18n="es" :disabled="!editing" />
 
 
         </div>
@@ -70,35 +65,24 @@
               <span class="label-text font-normal text-red-500"> {{ formErrorMsgs.family[0] }} </span>
             </div>
           </label>
-          <SelectInput class="w-full" 
-            :class="formErrorMsgs.family ? 'select-error' : ''"
-            v-model="task.family"  
-            label="Familia" 
-            :options="families"
-            :selectedValue="task.family"
-            :disabled="!editing"
-          />
+          <SelectInput class="w-full" :class="formErrorMsgs.family ? 'select-error' : ''" v-model="task.family"
+            label="Familia" :options="families" :selectedValue="task.family" :disabled="!editing" />
 
         </div>
         <div class="border-b-2 py-4 ">
           <p>Estado</p>
-          <SelectInput class="w-full" 
-            v-model="task.state"  
-            label="Estado" 
-            :options="states"
-            :selectedValue="task.state"
-            :disabled="!editing"
-          />
+          <SelectInput class="w-full" v-model="task.state" label="Estado" :options="states" :selectedValue="task.state"
+            :disabled="!editing" />
         </div>
-       
-       </aside>
-      </div>
+
+      </aside>
+    </div>
 
   </div>
 
-  <ToastSuccess v-if="editSuccess" @click="editSuccess = false" msg="Tarea actualizada correctamente"/>
-  <ToastError v-if="editError" @click="editError = false" msg="Error al actualizar tarea"/>
-  <ToastError v-if="deleteError" @click="deleteError = false" msg="Error al eliminar tarea"/>
+  <ToastSuccess v-if="editSuccess" @click="editSuccess = false" msg="Tarea actualizada correctamente" />
+  <ToastError v-if="editError" @click="editError = false" msg="Error al actualizar tarea" />
+  <ToastError v-if="deleteError" @click="deleteError = false" msg="Error al eliminar tarea" />
 
 
   <dialog id="confirmationModal" class="modal">
@@ -107,7 +91,7 @@
       <div class="modal-action">
         <form method="dialog">
           <div class="btn w-20 btn-error mr-2" @click="deleteTask">Si</div>
-          <button  ref="closeModalBtn" class="btn w-20 btn-accent">No</button>
+          <button ref="closeModalBtn" class="btn w-20 btn-accent">No</button>
         </form>
       </div>
     </div>
@@ -155,7 +139,7 @@ export default {
     ToastError
   },
   computed:{
-    ...mapState(useStore, ['task', 'states', 'families', 'fromRoute'])
+    ...mapState(useStore, ['task', 'states', 'families', 'fromRoute', 'user'])
   },
   methods: {
     ...mapActions(useStore, ['resetTask', 'addNewTask', 'setTasks', 'getTaskDetails', 'setFamilies', 'updateTaskDetails', 'deleteSelectedTask']),
@@ -220,6 +204,7 @@ export default {
   },
   async unmounted(){
     this.resetTask()
+    
     //await this.setTasks({}, 'due_date')
   }
 
