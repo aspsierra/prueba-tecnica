@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 from datetime import timedelta
 import os
 from pathlib import Path
+from decouple import Config, RepositoryEnv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -26,6 +27,11 @@ SECRET_KEY = 'django-insecure-qcg)&3#2uk^!#7g*vsoz-&o#kc$94e1k_69+uo_j6mqng*hcyh
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+
+if DEBUG:
+    env_file = os.path.join(BASE_DIR, '.env.development') 
+
+config = Config(RepositoryEnv(env_file))
 
 # Application definition
 
@@ -41,7 +47,14 @@ INSTALLED_APPS = [
     'tasks_app',
     'corsheaders',
     'rest_framework_simplejwt',
-]
+    "django.contrib.sites",
+    "rest_framework.authtoken",
+    "dj_rest_auth",
+    "allauth",
+    "allauth.account",
+    "allauth.socialaccount",
+    "allauth.socialaccount.providers.github",
+    "social_django",]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -53,7 +66,8 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
-
+    'social_django.middleware.SocialAuthExceptionMiddleware',
+    'allauth.account.middleware.AccountMiddleware'
 ]
 
 ROOT_URLCONF = 'tasks_backend.urls'
@@ -83,7 +97,7 @@ WSGI_APPLICATION = 'tasks_backend.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'prueba_tecnica.sqlite3',
+        'NAME': BASE_DIR / f'{config("DB_NAME")}.sqlite3',
     }
 }
 
@@ -164,7 +178,7 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
     'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticated',  # Solo usuarios autenticados pueden acceder
+        'rest_framework.permissions.IsAuthenticated',
     )
 }
 
@@ -172,4 +186,29 @@ SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
     'AUTH_HEADER_TYPES': ('Bearer',),
+}
+
+AUTHENTICATION_BACKENDS = [
+    "django.contrib.auth.backends.ModelBackend",
+    "allauth.account.auth_backends.AuthenticationBackend",
+    "social_core.backends.github.GithubOAuth2",
+]
+
+SITE_ID = 1
+
+
+ACCOUNT_LOGIN_METHODS = {"email"}
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_EMAIL_VERIFICATION = "mandatory"
+
+LOGIN_REDIRECT_URL = "/"
+LOGOUT_REDIRECT_URL = "/"
+
+SOCIALACCOUNT_PROVIDERS = {
+    'github': {
+        'APP': {
+            'CLIENT_ID': config('GITHUB_CLIENT_ID'),
+            'SECRET': config('GITHUB_CLIENT_SECRET'),
+        }
+    }
 }

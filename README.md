@@ -7,7 +7,7 @@ Este repositorio contiene el backend y el frontend para la prueba técnica propu
 
 Desarrollado usando Python 3.11 y Django 5.1.6. Para la administración de versiones de lenguaje y de packages se usaron [pyenv](https://github.com/pyenv/pyenv) y [pip](https://pypi.org/project/pip/).
 
-Para la autenticación de usuarios se usa un token JWT.
+Para la autenticación de usuarios se usa un token JWT. También se da la opción de usar la autenticación usando el SSO de Github.
 
 El backend de la aplicación está contenido en la carpeta **tasks_backend**.
 
