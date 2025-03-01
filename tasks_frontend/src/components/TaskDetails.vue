@@ -102,16 +102,16 @@
 
 
   <dialog id="confirmationModal" class="modal">
-  <div class="modal-box">
-    <p class="py-4">¿Seguro que quieres eliminar esta tarea?</p>
-    <div class="modal-action">
-      <form method="dialog">
-        <div class="btn w-20 btn-error mr-2" @click="deleteTask">Si</div>
-        <button  ref="closeModalBtn" class="btn w-20 btn-accent">No</button>
-      </form>
+    <div class="modal-box">
+      <p class="py-4">¿Seguro que quieres eliminar esta tarea?</p>
+      <div class="modal-action">
+        <form method="dialog">
+          <div class="btn w-20 btn-error mr-2" @click="deleteTask">Si</div>
+          <button  ref="closeModalBtn" class="btn w-20 btn-accent">No</button>
+        </form>
+      </div>
     </div>
-  </div>
-</dialog>
+  </dialog>
 
 </template>
 

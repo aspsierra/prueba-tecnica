@@ -53,9 +53,11 @@ export const useStore = defineStore('main', {
         async updateTaskDetails(data){
             return await this.api.updateTask(data)
         },
-        async deleteSelectedTask(){
+        async deleteSelectedTask(id = this.task.id){
             console.log('en store');    
-            return await this.api.deleteTask(this.task.id)
+            let res = await this.api.deleteTask(id)
+            this.tasks = this.tasks.filter(task => task.id !== id);
+            return res
         },
         async addNewTask(data){
             this.task = await this.api.addTask(data)

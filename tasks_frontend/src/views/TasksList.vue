@@ -15,11 +15,13 @@
             @order="orderTable" />
 
         <div class="mt-5">
-            <div v-for="task in tasks" class="cursor-pointer border-gray-500 hover:brightness-75 border-b-2 mb-2">
-
+            <div v-for="task in tasks" class="cursor-pointer border-gray-500 hover:brightness-75 border-b-2 mb-2 flex justify-between group">
                 <RouterLink :to="`/task/${task.id}`" @click="openModal">
                     <TaskOverview  :task="task"></TaskOverview>
                 </RouterLink>
+                <div @click="confirmDelete(task.id)" class="hidden group-hover:inline-flex btn btn-sm btn-outline btn-error m-2">
+                    <Icon icon="material-symbols:delete-outline-rounded" width="24" height="24" />      
+                </div>
             </div>
         </div>
     </main>
@@ -27,6 +29,13 @@
     <dialog ref="detailsModal" class="modal">   
         <RouterView />
     </dialog>
+
+    <ConfirmationModal 
+        :show="showConfirmation" 
+        label="¿Seguro que quieres eliminar esta tarea?"
+        @cancel="showConfirmation=false"
+        @accept="deleteTask"
+    />
 
 </template>
 
@@ -38,6 +47,7 @@ import TaskOverview from '@/components/TaskOverview.vue';
 import { mapActions, mapState } from 'pinia';
 import { useStore } from '@/stores/store';
 import { Icon } from '@iconify/vue';
+import ConfirmationModal from '@/components/notifications/ConfirmationModal.vue';
 
 
 export default {
@@ -56,13 +66,16 @@ export default {
             ordering: 'due_date',
             titleFamily:'',
             fromFamily: false,
+            showConfirmation: false,
+            taskToDelete: null,
         }
     },
     props: ['id'],
     components: {
         TaskOverview,
         TaskListFilters,
-        Icon
+        Icon,
+        ConfirmationModal
     },
     computed: {
         ...mapState(useStore, ['families', 'states', 'tasks', 'fromRoute'])
@@ -93,7 +106,7 @@ export default {
         }
     },
     methods: {
-        ...mapActions(useStore, ['filterTasks', 'setTasks', 'setFamilies', 'setFromRoute']),
+        ...mapActions(useStore, ['filterTasks', 'setTasks', 'setFamilies', 'setFromRoute', 'deleteSelectedTask']),
         async orderTable(orderBy) {
             this.ordering = orderBy
             await this.setTasks(this.filters, this.ordering)    
@@ -119,6 +132,19 @@ export default {
                     this.setFromRoute(this.$route.path)
                     this.fromFamily = true
                 }
+            }
+        },
+        confirmDelete(taskId){
+            this.showConfirmation = true
+            this.taskToDelete = taskId
+        },
+        async deleteTask(){
+            try{
+                await this.deleteSelectedTask(this.taskToDelete)
+                this.showConfirmation = false
+            } catch(err) {
+                console.error(err);
+                this.deleteError = true
             }
         }
     
