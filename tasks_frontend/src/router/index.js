@@ -8,21 +8,34 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      name: 'tareas',
+      name: 'taskList',
       component: TasksList,
       children: [
         {
           path: '/task/:id',
-          name: 'Tarea',
+          name: 'task',
           component: TaskDetails,
           props: true
+        },
+        {
+          path: '/task/new',
+          name: 'newTask',
+          component: TaskDetails,
         },
       ]
     },
     {
       path: '/families',
-      name: 'Familias',
+      name: 'familyList',
       component: FamilyList,
+      children: [
+      ]
+    },
+    {
+      path: '/family/:id',
+      name: 'tasksByFamily',
+      component: TasksList,
+      props: true
     },
   ],
 })

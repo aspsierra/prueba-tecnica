@@ -15,7 +15,6 @@
             separator=" a "
             as-single use-range
         />
-        <BtnClear tooltip="Eliminar filtros" @clear="clearFilters"/>
     </div>
 
     <div class="w-full">
@@ -28,7 +27,6 @@
 </template>
 
 <script>
-import BtnClear from '../inputs/BtnClear.vue';
 import SelectInput from '../inputs/SelectInput.vue';
 import TextInput from '../inputs/TextInput.vue';
 import VueTailwindDatepicker from "vue-tailwind-datepicker";
@@ -39,7 +37,7 @@ export default {
     data(){
         return {
             formatter: {
-                date: "DD MMM YYYY",
+                date: "YYYY-MM-DD",
                 month: "MMM",
             },
             order: false,
@@ -47,7 +45,6 @@ export default {
     },
     props:{
         filters: Object,
-        resetFilters: Object,
         families: Array,
         states: Array,
     },
@@ -55,7 +52,6 @@ export default {
         SelectInput,
         TextInput,
         VueTailwindDatepicker,
-        BtnClear,
         Icon
     },
     computed:{
@@ -67,12 +63,6 @@ export default {
         }
     },
     methods: {
-        clearFilters(){
-            this.$emit('clearFilters')
-            Object.assign(this.filters, _.cloneDeep(this.$parent.initialFilters));
-            // Object.assign(this.filters, this.resetFilters);
-            // console.log(this.filters);
-        },
         orderTable(){
             this.order = !this.order
             if(this.order) {

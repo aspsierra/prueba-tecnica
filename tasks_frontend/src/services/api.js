@@ -18,6 +18,36 @@ export class Api {
             })
     }
 
+    async postQuery(URL, data) {
+        return axios    
+            .post(URL, data)
+            .then(response => response.data)
+            .catch(err => {
+                console.error('POST request failed', err)
+                throw err
+            })
+    }
+
+    async putQuery(URL, data, headers=this.headers){
+        return await axios
+            .put(URL, data)
+            .then(response => true)
+            .catch(err => {
+                console.error('PUT request failed', err)
+                throw err
+            })
+    }
+
+    async deleteQuery(URL){
+        return await axios
+            .delete(URL)
+            .then(response => true)
+            .catch(err => {
+                console.error('DELETE request failed', err)
+                throw err
+            })
+    }
+
     formatQueryParams(params, order) {
         let searchFilters = {}
         for (const [key, value] of Object.entries(params)) {      
@@ -59,8 +89,25 @@ export class Api {
                 {id: state.value, name: state.label}
             )
         } 
-
-        return formattedStates
         
+        return formattedStates
+    }
+    
+    async getTaskData(id){
+        return await this.getQuery(this.baseApiUrl + `task-detail/${id}`)
+    }
+
+    async updateTask(data){
+        return await this.putQuery(this.baseApiUrl + `task-detail/${data.id}/update/`, data)
+    }
+
+    async deleteTask(id) {
+        return await this.deleteQuery(this.baseApiUrl + `task-detail/${id}/delete/`)
+    }
+
+    async addTask(data){
+        console.log(data);
+        
+        return await this.postQuery(this.baseApiUrl + 'task-detail/create-task/', data)
     }
 }
