@@ -3,7 +3,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from .models import Family, Task
 from .serializers import FamilySerializer, TaskReadSerializer, TaskListSerializer, TaskWriteSerializer
 from .filters import TaskListFilter, FamilyListFilter
-from rest_framework.decorators import api_view, action
+from rest_framework.decorators import api_view, action, permission_classes
 from rest_framework.response import Response
 from .permissions import IsAdminOrReadOnly
 
@@ -65,6 +65,7 @@ class TaskViewSet(viewsets.ModelViewSet):
 
 
 @api_view(['GET'])
+@permission_classes([IsAdminOrReadOnly])
 def get_task_states(request):
     states = [{'value' : state[0], 'label': state[1]} for state in Task.STATES]
     return Response(states)

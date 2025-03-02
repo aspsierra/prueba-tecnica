@@ -3,6 +3,23 @@
 
 Este repositorio contiene el backend y el frontend para la prueba técnica propuesta
 
+## Docker
+
+El proyecto está preparado para usarse con docker en modo desarrollo, para crear los contenedores ejecutar:
+
+- `docker compose up --build`, compilar el contenedor y levantarlos. Durante este paso se 
+solicitará por consola crear un super usuario para poder acceder al panel de administrador de 
+Django
+
+- `docker compose down` para parar los contenedores. En caso de querer volver a levantarlos: 
+`docker compose up --build`
+
+Las rutas para la aplicación serán las mismas que sin usar docker:
+
+- **localhost:8000/admin** abrirá el panel de administrador de Django.
+- **localhost:8000/api** muestrá los endpoints disponibles para la API creada.+
+- **localhost:5173/**, ruta del frontend.
+
 ## Backend
 
 Desarrollado usando Python 3.11 y Django 5.1.6. Para la administración de versiones de lenguaje y de packages se usaron [pyenv](https://github.com/pyenv/pyenv) y [pip](https://pypi.org/project/pip/).
@@ -55,5 +72,12 @@ El backend de la aplicación está contenido en la carpeta **tasks_frontend**.
 
 - `npm run dev`, despliega la aplicación en modo desarrollo.
 - **localhost:5173/** es la ruta que usa la aplicación
+
+## Permisos
+
+La aplicación distingue entre dos tipos de usuarios, usuario común (sin registrar) y administradores (usuarios registrados y super usuarios).
+
+- Los usuarios Comunes solo pueden ver la lista de tareas y los detalles de una tarea seleccionada, pero no pueden interactuar con ellas de ninguna forma.
+- Los administradores tienen capacidad para modificar, crear y eliminar cualquier tarea.
 
 ---
