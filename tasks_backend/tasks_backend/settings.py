@@ -47,14 +47,16 @@ INSTALLED_APPS = [
     'tasks_app',
     'corsheaders',
     'rest_framework_simplejwt',
-    "django.contrib.sites",
-    "rest_framework.authtoken",
     "dj_rest_auth",
+    "django.contrib.sites",
     "allauth",
     "allauth.account",
+    "dj_rest_auth.registration",
+    "rest_framework.authtoken",
     "allauth.socialaccount",
     "allauth.socialaccount.providers.github",
-    "social_django",]
+    "allauth.socialaccount.providers.google",
+]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -66,7 +68,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'social_django.middleware.SocialAuthExceptionMiddleware',
+    # 'social_django.middleware.SocialAuthExceptionMiddleware',
     'allauth.account.middleware.AccountMiddleware'
 ]
 
@@ -173,42 +175,81 @@ CORS_ALLOWED_ORIGINS = [
     'http://localhost:5173'
 ]
 
+CORS_ALLOW_CREDENTIALS  = True
+
+CSRF_TRUSTED_ORIGINS = [
+    'http://localhost:5173',
+    'https://localhost:5173',
+]
+
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'dj_rest_auth.jwt_auth.JWTCookieAuthentication',
     ),
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
     )
 }
 
+
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
     'AUTH_HEADER_TYPES': ('Bearer',),
+    "SIGNING_KEY": SECRET_KEY,
+    "AUTH_HEADER_TYPES": ("Bearer",),
+    "LEEWAY": 10,
 }
 
 AUTHENTICATION_BACKENDS = [
     "django.contrib.auth.backends.ModelBackend",
     "allauth.account.auth_backends.AuthenticationBackend",
-    "social_core.backends.github.GithubOAuth2",
 ]
 
 SITE_ID = 1
 
 
-ACCOUNT_LOGIN_METHODS = {"email"}
-ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_EMAIL_VERIFICATION = "mandatory"
+ACCOUNT_SIGNUP = True  
+
+REST_USE_JWT = True
+ACCOUNT_EMAIL_REQUIRED = False  
+ACCOUNT_USERNAME_REQUIRED = False  
+SOCIALACCOUNT_AUTO_SIGNUP = True 
+ACCOUNT_PASSWORD_REQUIRED = False
+ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE = False
+# ACCOUNT_LOGIN_METHODS = {"email"}
+# ACCOUNT_EMAIL_VERIFICATION = "mandatory"
+# SOCIALACCOUNT_ADAPTER = "tasks_app.adapters.MySocialAccountAdapter"
 
 LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/"
 
 SOCIALACCOUNT_PROVIDERS = {
     'github': {
+        'SCOPE': [
+            'user',
+            # 'user:email',
+        ],
         'APP': {
             'CLIENT_ID': config('GITHUB_CLIENT_ID'),
             'SECRET': config('GITHUB_CLIENT_SECRET'),
-        }
+            'key': '',
+        },
+        "OAUTH_PKCE_ENABLED": True,
+
+    },
+    'google': {
+        'SCOPE': ['email', 'profile'],
+        'AUTH_PARAMS': {
+            'access_type': 'offline',
+        },
+        'APP': {
+            'client_id': config('GOOGLE_CLIENT_ID'),
+            'secret': config('GOOGLE_CLIENT_SECRET'),
+            'key': ''
+        },
+        "OAUTH_PKCE_ENABLED": True,
+        "VERIFY_ID_TOKEN_SIGNATURE": False,
     }
 }

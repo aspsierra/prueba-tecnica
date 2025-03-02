@@ -65,7 +65,7 @@ export const useStore = defineStore('main', {
             this.task = await this.api.addTask(data)
         },
 
-        async login(newToken){
+        async getUser(newToken){
             this.token = newToken
             localStorage.setItem('token', newToken);
             this.user = await this.api.getUserData()

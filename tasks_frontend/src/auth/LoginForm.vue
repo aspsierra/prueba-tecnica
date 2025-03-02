@@ -21,8 +21,12 @@
             <p class="text-red-500" v-if="formError.detail">{{ formError.detail }}</p>
 
             <div class="w-full text-right mt-5">
+                <div @click="loginGithub" class="btn btn-md btn-info">
+                    <Icon icon="material-symbols:check-rounded" width="24" height="24" />
+                    Iniciar con github
+                </div>
 
-                <div v-if="!newTask" @click="login" class="btn btn-md btn-info">
+                <div @click="login" class="btn btn-md btn-info">
                     <Icon icon="material-symbols:check-rounded" width="24" height="24" />
                     Iniciar Sesión
                 </div>
@@ -55,15 +59,19 @@ export default {
         Icon
     },
     methods: {
-        ...mapActions(useStore, ['setToken']),
+        ...mapActions(useStore, ['getUser']),
         async login() {
             try {
                 let response = await this.$api.getUserToken(this.user)
-                this.login(response.access)
+                console.log(response);      
+                this.getUser(response.access)
                 this.$emit('closeForm')
             } catch (err) {
                 this.formError = err.response.data
             }
+        },
+        async loginGithub(){
+            await this.$auth.loginWithGitHub()
         }
     }
 };
