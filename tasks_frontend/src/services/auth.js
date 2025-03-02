@@ -1,3 +1,4 @@
+import { useStore } from "@/stores/store"
 import axios from "axios"
 
 export class Auth {
@@ -9,6 +10,10 @@ export class Auth {
     GITHUB_AUTH_URL = `https://github.com/login/oauth/authorize?client_id=${this.CLIENT_ID}&scope=user`;
     GOOGLE_AUTH_URL= `https://accounts.google.com/o/oauth2/v2/auth?redirect_uri=${this.GOOGLE_CALLBACK}&prompt=consent&response_type=code&client_id=${this.GOOGLE_CLIENT_ID}&scope=openid%20email%20profile&access_type=offline`;
     
+    constructor(){
+        this.store = useStore()
+    }
+
     async loginWithGitHub(){
 
         window.location.href = this.GOOGLE_AUTH_URL
@@ -39,8 +44,8 @@ export class Auth {
             console.log(response);
             
 
-            if (response.data && response.data.access) {
-                localStorage.setItem("token", response.data.access);
+            if (response.data && response.data.key) {
+                useStore.getUser(response.data.key)
             } else {
                 console.error("Respuesta del servidor inválida:", response);
                 throw new Error("Respuesta del servidor inválida.");
