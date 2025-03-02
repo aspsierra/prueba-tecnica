@@ -1,24 +1,21 @@
-version: '3.8'
-
 services:
-  backend:
-    build: ./backend
+  tasks_backend:
+    build: ./tasks_backend
     container_name: django_api
     ports:
       - "8000:8000"
     volumes:
-      - ./backend:/app
-    env_file:
-      - .env
-    depends_on:
-      - frontend
+      - ./tasks_backend:/app
 
-  frontend:
-    build: ./frontend
+  tasks_frontend:
+    build: ./tasks_frontend
     container_name: vue_app
     ports:
       - "5173:5173"
     volumes:
-      - ./frontend:/app
+      - ./tasks_frontend:/app
+      - /app/node_modules/ 
+    stdin_open: true
+    tty: true
     depends_on:
-      - backend
+      - tasks_backend
