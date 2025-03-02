@@ -5,7 +5,9 @@
             <h1 class="text-3xl text-white font-bold mb-5 overflow-ellipsis">
                 {{titleFamily ? titleFamily : 'Listado de Tareas'}}
             </h1>
-            <RouterLink v-if="!fromFamily" to="/task/new" @click="openModal" class="btn btn-active btn-primary">
+            <RouterLink v-if="!fromFamily" to="/task/new" @click="openModal" class="btn btn-active btn-primary"
+                :class="user.pk ? '': 'btn-disabled'"
+                >
                 <Icon icon="material-symbols:add-2-rounded" width="24" height="24" />
                 Añadir tarea
             </RouterLink>
@@ -19,7 +21,7 @@
                 <RouterLink :to="`/task/${task.id}`" @click="openModal">
                     <TaskOverview  :task="task"></TaskOverview>
                 </RouterLink>
-                <div @click="confirmDelete(task.id)" class="hidden group-hover:inline-flex btn btn-sm btn-outline btn-error m-2">
+                <div v-if="user.pk" @click="confirmDelete(task.id)" class="hidden group-hover:inline-flex btn btn-sm btn-outline btn-error m-2">
                     <Icon icon="material-symbols:delete-outline-rounded" width="24" height="24" />      
                 </div>
             </div>
@@ -78,7 +80,7 @@ export default {
         ConfirmationModal
     },
     computed: {
-        ...mapState(useStore, ['families', 'states', 'tasks', 'fromRoute'])
+        ...mapState(useStore, ['families', 'states', 'tasks', 'fromRoute', 'user'])
     },
     watch: {
         filters: {

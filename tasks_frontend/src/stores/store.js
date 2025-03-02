@@ -11,7 +11,9 @@ export const useStore = defineStore('main', {
             // "due_date": ""        
         },
         api: new Api(),
-        fromRoute: "/"
+        fromRoute: "/",
+        token: null,
+        user: {}
     }),
     actions: {
         setFromRoute(route){
@@ -61,6 +63,21 @@ export const useStore = defineStore('main', {
         },
         async addNewTask(data){
             this.task = await this.api.addTask(data)
+        },
+
+        async login(newToken){
+            this.token = newToken
+            localStorage.setItem('token', newToken);
+            this.user = await this.api.getUserData()
+        },
+
+        async logout(){
+            await this.api.logout()
+            this.user = {}
+            this.token = null
+            localStorage.removeItem('token')
         }
+
+
     }
 })

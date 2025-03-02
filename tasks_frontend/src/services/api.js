@@ -1,10 +1,17 @@
+import { useStore } from "@/stores/store";
 import axios from "axios";
 
 export class Api {
     headers = {'Content-Type': 'application/json'}
     baseApiUrl = import.meta.env.VITE_API_URL
 
-    async getQuery(URL, searchParams={}, headers=this.headers){
+    getAuthHeaders() {
+        const store = useStore()
+        const token = store.token;
+        return token ? { ...this.headers, Authorization: `Bearer ${token}` } : this.headers;
+    }
+
+    async getQuery(URL, searchParams={}, headers=this.getAuthHeaders()){
 
         return await axios
             .get(URL, { 
@@ -18,9 +25,9 @@ export class Api {
             })
     }
 
-    async postQuery(URL, data) {
+    async postQuery(URL, data, headers=this.getAuthHeaders()) {
         return axios    
-            .post(URL, data)
+            .post(URL, data, {headers : headers})
             .then(response => response.data)
             .catch(err => {
                 console.error('POST request failed', err)
@@ -28,9 +35,9 @@ export class Api {
             })
     }
 
-    async putQuery(URL, data, headers=this.headers){
+    async putQuery(URL, data, headers=this.getAuthHeaders()){
         return await axios
-            .put(URL, data)
+            .put(URL, data, {headers : headers})
             .then(response => true)
             .catch(err => {
                 console.error('PUT request failed', err)
@@ -38,9 +45,9 @@ export class Api {
             })
     }
 
-    async deleteQuery(URL){
+    async deleteQuery(URL, headers=this.getAuthHeaders()){
         return await axios
-            .delete(URL)
+            .delete(URL, {headers : headers})
             .then(response => true)
             .catch(err => {
                 console.error('DELETE request failed', err)
@@ -109,5 +116,17 @@ export class Api {
         console.log(data);
         
         return await this.postQuery(this.baseApiUrl + 'task-detail/create-task/', data)
+    }
+
+    async getUserToken(data){
+        return await this.postQuery(this.baseApiUrl + 'token/', data)
+    }
+
+    async getUserData(){
+        return await this.getQuery(this.baseApiUrl + 'auth/user/')
+    }
+
+    async logout(){
+        return await this.postQuery(this.baseApiUrl + 'auth/logout/', {})
     }
 }
