@@ -8,9 +8,9 @@ import { Api } from '@/services/api'
 import { Auth } from './services/auth'
 
 const app = createApp(App)
+app.use(createPinia())
 app.config.globalProperties.$api = new Api()
 app.config.globalProperties.$auth = new Auth()
 app.use(router)
-app.use(createPinia())
 
 app.mount('#app')

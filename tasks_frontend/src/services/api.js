@@ -8,11 +8,15 @@ export class Api {
     getAuthHeaders() {
         const store = useStore()
         const token = store.token;
+        console.log(token, store.token);
+        
         return token ? { ...this.headers, Authorization: `Bearer ${token}` } : this.headers;
     }
 
     async getQuery(URL, searchParams={}, headers=this.getAuthHeaders()){
 
+        console.log(headers);
+        
         return await axios
             .get(URL, { 
                 headers: headers,
@@ -123,10 +127,14 @@ export class Api {
     }
 
     async getUserData(){
-        return await this.getQuery(this.baseApiUrl + 'auth/user/')
+        console.log();
+        
+        console.log(this.headers);
+        
+        return await this.getQuery(this.baseApiUrl + 'dj-rest-auth/user/')
     }
 
     async logout(){
-        return await this.postQuery(this.baseApiUrl + 'auth/logout/', {})
+        return await this.postQuery(this.baseApiUrl + 'dj-rest-auth/logout/', {})
     }
 }

@@ -1,5 +1,6 @@
-import { useStore } from "@/stores/store"
 import axios from "axios"
+import { Api } from "./api"
+import { useStore } from "@/stores/store"
 
 export class Auth {
     API_URL = import.meta.env.VITE_API_URL
@@ -11,7 +12,7 @@ export class Auth {
     GOOGLE_AUTH_URL= `https://accounts.google.com/o/oauth2/v2/auth?redirect_uri=${this.GOOGLE_CALLBACK}&prompt=consent&response_type=code&client_id=${this.GOOGLE_CLIENT_ID}&scope=openid%20email%20profile&access_type=offline`;
     
     constructor(){
-        this.store = useStore()
+        this.api = new Api()
     }
 
     async loginWithGitHub(){
@@ -42,10 +43,13 @@ export class Auth {
 
             // const response = await axios.get("http://localhost:8000/api/auth/github/callback/");
             console.log(response);
-            
 
             if (response.data && response.data.key) {
-                useStore.getUser(response.data.key)
+                localStorage.setItem('token', response.data.key);
+                const store = useStore()
+                store.token = response.data.key
+                let user = await this.api.getUserData()
+                localStorage.setItem('user', user);
             } else {
                 console.error("Respuesta del servidor inválida:", response);
                 throw new Error("Respuesta del servidor inválida.");
