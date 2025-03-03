@@ -2,7 +2,7 @@
     <main class="container px-40 pt-20 pb-10">
 
         <header class="flex justify-between mb-5">
-            <h1 class="text-3xl text-white font-bold mb-5 overflow-ellipsis">
+            <h1 class="text-3xl  font-bold mb-5 overflow-ellipsis">
                 {{titleFamily ? titleFamily : 'Listado de Tareas'}}
             </h1>
             <RouterLink v-if="!fromFamily" to="/task/new" @click="openModal" class="btn btn-active btn-primary"

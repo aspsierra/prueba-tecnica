@@ -22,7 +22,7 @@
 
     <div class="border-t-2 flex h-full justify-between">
       <main class="w-full h-full">
-        <div class="my-5 m-10 text-xl font-bold text-white ">
+        <div class="my-5 m-10 text-xl font-bold  ">
           <p v-if="!editing">{{ task.title }}</p>
 
           <label v-if="editing" class="form-control">
