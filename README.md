@@ -7,30 +7,29 @@ Este repositorio contiene el backend y el frontend para la prueba técnica propu
 
 El proyecto está preparado para usarse con docker en modo desarrollo, para crear los contenedores ejecutar:
 
-- `docker compose up --build`, compilar el contenedor y levantarlos. Durante este paso se 
-solicitará por consola crear un super usuario para poder acceder al panel de administrador de 
-Django
+- `docker compose up --build`, compilar el contenedor y levantarlos.
 
 - `docker compose down` para parar los contenedores. En caso de querer volver a levantarlos: 
 `docker compose up --build`
+- Para construir los contenedores se puede ejecutar también `docker compose build` o `docker compose build --no-cache` en caso de querer regenerarlo completamente.
 
 Las rutas para la aplicación serán las mismas que sin usar docker:
 
 - **localhost:8000/admin** abrirá el panel de administrador de Django.
-- **localhost:8000/api** muestrá los endpoints disponibles para la API creada.+
+- **localhost:8000/api** muestrá los endpoints disponibles para la API creada.
 - **localhost:5173/**, ruta del frontend.
 
 ## Backend
 
 Desarrollado usando Python 3.11 y Django 5.1.6. Para la administración de versiones de lenguaje y de packages se usaron [pyenv](https://github.com/pyenv/pyenv) y [pip](https://pypi.org/project/pip/).
 
-Para la autenticación de usuarios se usa un token JWT. También se da la opción de usar la autenticación usando el SSO de Github.
+Para la autenticación de usuarios se usa un token JWT.
 
 El backend de la aplicación está contenido en la carpeta **tasks_backend**.
 
 ### Inicialización del proyecto
 
-1. `pyenv install`, automáticamente leerá el archivo **.python-version** y se intslará la versión especificada.
+1. `pyenv install`, automáticamente leerá el archivo **.python-version** y se intalará la versión especificada.
 2. `python -m venv .venv`, creación del entorno virtual.
 3. `source .venv/bin/activate`, activación del entorno virtual.
 4. `pip install -r requirements.txt`, instalar los packages necesarios.
@@ -75,9 +74,9 @@ El backend de la aplicación está contenido en la carpeta **tasks_frontend**.
 
 ## Permisos
 
-La aplicación distingue entre dos tipos de usuarios, usuario común (sin registrar) y administradores (usuarios registrados y super usuarios).
+La aplicación distingue entre dos tipos de usuarios: usuario común (sin registrar) y administradores (usuarios registrados y super usuarios).
 
-- Los usuarios Comunes solo pueden ver la lista de tareas y los detalles de una tarea seleccionada, pero no pueden interactuar con ellas de ninguna forma.
+- Los usuarios comunes solo pueden ver la lista de tareas y los detalles de una tarea seleccionada, pero no pueden interactuar con ellas de ninguna forma.
 - Los administradores tienen capacidad para modificar, crear y eliminar cualquier tarea.
 
 ---
