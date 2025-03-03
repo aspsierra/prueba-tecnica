@@ -22,7 +22,7 @@
 
             <div class="w-full text-right mt-5">
 
-                <div v-if="!newTask" @click="login" class="btn btn-md btn-info">
+                <div v-if="!newTask" @click="loginUser" class="btn btn-md btn-info">
                     <Icon icon="material-symbols:check-rounded" width="24" height="24" />
                     Iniciar Sesión
                 </div>
@@ -55,13 +55,17 @@ export default {
         Icon
     },
     methods: {
-        ...mapActions(useStore, ['setToken']),
-        async login() {
+        ...mapActions(useStore, ['login']),
+        async loginUser() {
             try {
                 let response = await this.$api.getUserToken(this.user)
-                this.login(response.access)
+                console.log(response);
+                
+                await this.login(response.access)
                 this.$emit('closeForm')
             } catch (err) {
+                console.log(err);
+                
                 this.formError = err.response.data
             }
         }
