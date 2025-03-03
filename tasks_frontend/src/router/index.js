@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import TasksList from '@/views/TasksList.vue'
 import FamilyList from '@/views/FamilyList.vue'
 import TaskDetails from '@/components/TaskDetails.vue'
+import NotFound404 from '@/views/error/notFound404.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -37,6 +38,11 @@ const router = createRouter({
       component: TasksList,
       props: true
     },
+    {
+      path: "/:pathMatch(.*)*", 
+      name: 'notFound',
+      component: NotFound404
+    }
   ],
 })
 

@@ -122,6 +122,10 @@ export class Api {
         return await this.postQuery(this.baseApiUrl + 'token/', data)
     }
 
+    async register(data){
+        return await this.postQuery(this.baseApiUrl + 'auth/register/', data)
+    }
+
     async getUserData(){
         return await this.getQuery(this.baseApiUrl + 'auth/user/')
     }

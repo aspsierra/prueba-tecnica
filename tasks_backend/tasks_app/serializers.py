@@ -31,6 +31,7 @@ class TaskWriteSerializer(serializers.ModelSerializer):
         read_only_fields = ('creation_date',)
 
     def validate_due_date(self, value):
+        print(value)
         if value and value < date.today():
             raise serializers.ValidationError("La fecha de vencimiento no puede ser anterior a la actual")
         return value
